@@ -84,9 +84,8 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		// Refresh the list when visible
-		// TODO: Search all
+		Thread thread = new SearchThread("");
+		thread.start();
 		
 	}
 
@@ -125,8 +124,17 @@ public class MainActivity extends Activity {
 
 
 	class SearchThread extends Thread {
-		// TODO: Implement search thread
+		private String search;
 		
+		public SearchThread (String input){
+			this.search = input;
+		}
+		
+		@Override
+		public void run() {
+			movies.addAll(movieManager.searchMovies(search, null));
+			runOnUiThread(doUpdateGUIList);
+		}
 	}
 
 	
@@ -137,7 +145,7 @@ public class MainActivity extends Activity {
 			this.movieId = movieId;
 		}
 
-		@Override
+			@Override
 		public void run() {
 			movieManager.deleteMovie(movieId);
 
